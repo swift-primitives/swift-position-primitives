@@ -19,7 +19,7 @@
 /// // .spaceBetween: [A     B     C]  // Equal gaps, no edge space
 /// // .spaceEvenly:  [  A   B   C  ]  // Equal space everywhere
 /// ```
-public enum Distribution: Sendable, Hashable, Codable {
+public enum Distribution: Sendable, Hashable {
     /// Packs items together with minimum spacing, no extra distribution.
     case fill
 
@@ -48,7 +48,7 @@ extension Distribution {
     /// // .around:  [ A    B    C ]  // Half-space at edges
     /// // .evenly:  [  A   B   C  ]  // Full space everywhere
     /// ```
-    public enum Space: Sendable, Hashable, Codable, CaseIterable {
+    public enum Space: Sendable, Hashable, CaseIterable {
         /// Distributes space only between items, leaving no space at container edges.
         case between
 
@@ -79,7 +79,15 @@ extension Distribution {
 // MARK: - CaseIterable
 
 extension Distribution: CaseIterable {
+    /// Every distribution, enumerating `fill` followed by each `Space` strategy.
     public static var allCases: [Distribution] {
         [.fill, .space(.between), .space(.around), .space(.evenly)]
     }
 }
+
+// MARK: - Codable
+
+#if !hasFeature(Embedded)
+    extension Distribution: Codable {}
+    extension Distribution.Space: Codable {}
+#endif
